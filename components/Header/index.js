@@ -11,7 +11,7 @@ import Menu from './Menu';
 
 function Header({ onDrawerAction, drawerOpen }) {
     return (
-        <Box sx={{ position: 'sticky', top: 0, left: 0 }}>
+        <Box sx={{ position: 'sticky', top: 0, left: 0,zIndex:1200 }}>
             <Grid container
                 alignItems="center"
                 columnGap={5}

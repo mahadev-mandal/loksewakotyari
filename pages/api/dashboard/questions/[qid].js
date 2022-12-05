@@ -6,6 +6,8 @@ export default function question(req, res) {
     switch (req.method) {
         case 'PUT':
             return updateQuestion(req, res);
+        case 'GET':
+            return getQuestion(req, res);
         case 'DELETE':
             return deleteQuestion(req, res);
         default:
@@ -37,6 +39,16 @@ const deleteQuestion = async (req, res) => {
         const { qid } = req.query;
         const result = await questionModel.findOneAndDelete({ _id: qid });
         res.send(result);
+    } catch (err) {
+        res.status(500).send('Error occured while deleting question')
+    }
+}
+const getQuestion = async (req, res) => {
+    try {
+        const { qid } = req.query;
+        console.log(qid)
+        const result = await questionModel.findOne({ _id: qid });
+        res.json(result);
     } catch (err) {
         res.status(500).send('Error occured while deleting question')
     }

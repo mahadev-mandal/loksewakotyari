@@ -1,50 +1,11 @@
-// import { Button, Stack, styled, } from '@mui/material'
-// import React from 'react'
-// import BadgeAvatars from '../Drawer/BadgeAvatar'
-// import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-
-// const CustomWidthTooltip = styled(({ className, ...props }) => (
-//     <Tooltip {...props}
-//         componentsProps={{
-//             tooltip: {
-//                 sx: {
-//                     background: '#fff',
-//                     color: '#222',
-//                     borderRadius: 0,
-//                     mt: 0,
-//                     fontSize: 15,
-//                     boxShadow: '0 0 10px gray',
-//                     height: '100%',
-//                 },
-//             },
-//         }}
-//         PopperProps={{
-//             modifiers: [
-//                 {
-//                     name: "offset",
-//                     options: {
-//                         offset: [0, -10],
-//                     },
-//                 },
-//             ],
-//         }} classes={{ popper: className }}
-//         arrow
-//     />
-// ))({
-//     [`& .${tooltipClasses.tooltip}`]: {
-//         minWidth: 150,
-//     },
-// });
-
-// function LogoutTooltip() {
-//     return (
-//         <CustomWidthTooltip title={<ToolTipComp />}>
-//             <Stack><BadgeAvatars /></Stack>
-//         </CustomWidthTooltip>
-//     )
-// }
-
-// export default LogoutTooltip
+import {
+    Button,
+    ClickAwayListener,
+    Stack,
+    Tooltip,
+} from "@mui/material"
+import { useEffect, useState } from "react"
+import BadgeAvatars from '../Drawer/BadgeAvatar'
 
 const ToolTipComp = () => {
     return (
@@ -59,15 +20,6 @@ const ToolTipComp = () => {
     )
 }
 
-import {
-    Button,
-    ClickAwayListener,
-    Stack,
-    Tooltip,
-} from "@mui/material"
-import { useEffect, useState } from "react"
-
-import BadgeAvatars from '../Drawer/BadgeAvatar'
 
 
 function LogoutTooltip() {
@@ -108,7 +60,6 @@ function LogoutTooltip() {
                     ],
                 }}
             >
-                {/* <Button onClick={() => setOpen(!open)}>click</Button> */}
                 <Button
                 id="badged-avatar"
                     onClick={() => setOpen(!open)}

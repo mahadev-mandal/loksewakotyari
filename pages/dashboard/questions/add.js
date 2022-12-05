@@ -32,8 +32,8 @@ function AddQuestion() {
         initialValues: initialValues,
         validationSchema: questionValidationSchema,
         async onSubmit() {
-
-            await axios.post(`/api/dashboard/questions`, { ...values })
+            setMsg('');
+            await axios.post(`/api/dashboard/questions`, { ...values, description: value })
                 .then((r) => {
                     setMsg({ title: r.data, type: 'success' });
                     mutate(`/api/dashboard/questions`)
@@ -67,7 +67,7 @@ function AddQuestion() {
         setFieldValue('options', Object.keys(options).map(key => options[key]));
         setFieldValue('correctOption', options[correctOption]);
     }
-    console.log(value)
+
     return (
 
         <Stack spacing={1.5}>

@@ -1,7 +1,8 @@
 import React from 'react'
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import PropTypes from 'prop-types';
+import dynamic from 'next/dynamic';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 function ReadTextQuill({ value }) {
   return (

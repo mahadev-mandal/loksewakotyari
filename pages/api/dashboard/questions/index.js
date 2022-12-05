@@ -20,16 +20,17 @@ const addQuestion = async (req, res) => {
         const question = new questionModel({
             question: req.body.question,
             questionId: lastDoc.questionId + 1,
-            options: 'jkdj',
+            options: req.body.options,
             correctOption: req.body.correctOption,
             description: req.body.description,
             keywords: req.body.keywords,
             entryBy: 'mahadev',
-            slug: req.body.slug,
+            slug: req.body.question,
         })
         await question.save();
         res.send('Question saved sucessfully');
     } catch (err) {
+        console.log(err)
         const keyPatternObj = err.keyPattern;
         if (keyPatternObj) {
             const key = Object.keys(keyPatternObj)[0];

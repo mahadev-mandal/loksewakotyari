@@ -2,7 +2,13 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 import SendIcon from '@mui/icons-material/Send';
-const a = [1, 2, 3, 4, 5];
+const a = [
+    "How to Join Lok sewa ko tyari?",
+    "How can I pay for Live and Practice MCQ Exams? ",
+    "Is MCQ Exam Free or Paid ?",
+    "What is a Practice or Mock MCQ Exam ?",
+    "For which exams we provide online Exams ?"
+];
 
 function SimpleList() {
     return (
@@ -20,7 +26,7 @@ function SimpleList() {
                                     textDecoration: 'underline'
                                 }
                             }}
-                            primary="Which is the tallest mountain in the World" />
+                            primary={item} />
                     </Link>
                 </ListItem>
             ))

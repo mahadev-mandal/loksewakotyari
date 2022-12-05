@@ -4,6 +4,9 @@ import { useRouter } from 'next/router';
 import DrawerHeader from '../components/Drawer/DrawerHeader';
 import MiniDrawer from '../components/Drawer/MiniDrawer';
 import { Box } from '@mui/material';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
+import { headerPadding } from '../helpers/constants';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -24,7 +27,13 @@ function MyApp({ Component, pageProps }) {
       </Box>
     )
   }
-  return <Component {...pageProps} />
+  return <>
+    <Header />
+    <Box sx={{ p: headerPadding }}>
+      <Component {...pageProps} />
+    </Box>
+    <Footer />
+  </>
 }
 
 MyApp.propTypes = {
