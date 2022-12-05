@@ -9,6 +9,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import PropTypes from 'prop-types';
 
 export default function TemporaryDrawer({open,onClose}) {
 
@@ -64,3 +65,8 @@ export default function TemporaryDrawer({open,onClose}) {
         </div>
     );
 } 
+
+TemporaryDrawer.propTypes={
+    open:PropTypes.bool,
+    onClose:PropTypes.func,
+}

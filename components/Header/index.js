@@ -11,7 +11,7 @@ import Menu from './Menu';
 import TemporaryDrawer from '../Drawer/TemporaryDrawer';
 import { useState } from 'react';
 
-function Header({ onDrawerAction, drawerOpen }) {
+function Header() {
     const [dOpen, setDOpen] = useState(false);
     return (
         <Box sx={{ position: 'sticky', top: 0, left: 0, zIndex: 1200 }}>
