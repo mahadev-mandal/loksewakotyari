@@ -8,10 +8,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
 import Menu from './Menu';
+import TemporaryDrawer from '../Drawer/TemporaryDrawer';
+import { useState } from 'react';
 
 function Header({ onDrawerAction, drawerOpen }) {
+    const [dOpen, setDOpen] = useState(false);
     return (
-        <Box sx={{ position: 'sticky', top: 0, left: 0,zIndex:1200 }}>
+        <Box sx={{ position: 'sticky', top: 0, left: 0, zIndex: 1200 }}>
             <Grid container
                 alignItems="center"
                 columnGap={5}
@@ -25,9 +28,9 @@ function Header({ onDrawerAction, drawerOpen }) {
                         <IconButton aria-label="menu"
                             size="large"
                             sx={{ display: { sm: 'none', xs: 'inline', }, color: 'white' }}
-                            onClick={onDrawerAction}
+                            onClick={() => setDOpen(!dOpen)}
                         >
-                            {drawerOpen ? <CloseIcon /> : <MenuIcon />}
+                            {dOpen ? <CloseIcon /> : <MenuIcon />}
                         </IconButton>
                         {/* <Link href="/">
                         <a>
@@ -56,6 +59,7 @@ function Header({ onDrawerAction, drawerOpen }) {
                 </Grid>
             </Grid>
             <Menu />
+            <TemporaryDrawer open={dOpen} onClose={() => setDOpen(false)} />
         </Box >
     )
 }
