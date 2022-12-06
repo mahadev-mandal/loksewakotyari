@@ -54,7 +54,14 @@ function Footer() {
                     <Box sx={{ height: 70, width: 200, background: 'blue', mb: 2 }}>LOGO HERE</Box>
                     <Stack direction="row" spacing={2}>
                         {social.map((item) => (
-                            <Link href={item.link} key={item.link}><item.icon /></Link>
+                            <Box sx={{
+                                transition:'0.3s',
+                                '&:hover': {
+                                    transform: 'translateY(-5px)'
+                                }
+                            }} key={item.link}>
+                                <Link href={item.link} ><item.icon /></Link>
+                            </Box>
                         ))}
                     </Stack>
                 </Grid>
@@ -68,7 +75,7 @@ function Footer() {
                             sx={{ fontSize: 14, my: 0.7 }}
                             key={item.label}
                         >
-                            <item.icon sx={{ fontSize: 18 }} />
+                            <item.icon sx={{ fontSize: 18, }} />
                             <span style={{ fontWeight: 'bold' }}>{item.label}:</span>
                             <span>{item.content}</span>
                         </Stack>
@@ -78,7 +85,7 @@ function Footer() {
                     <Typography variant="h5">Quick Links</Typography>
                     <Divider sx={{ background: 'white', }} />
                     {quickLinks.map((item) => (
-                        <Stack key={item.label} sx={{my:1}}>
+                        <Stack key={item.label} sx={{ my: 1 }}>
                             <Link href={item.link} >{item.label}</Link>
                         </Stack>
                     ))}

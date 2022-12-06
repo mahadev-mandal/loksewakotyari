@@ -22,7 +22,12 @@ function ShareQuiestion() {
         <>
             <Stack direction="row" spacing={1}>
                 {social.map((item) => (
-                    <IconButton key={item} size="small">
+                    <IconButton sx={{
+                        transition: '0.3s',
+                        '&:hover': {
+                            transform: 'translateY(-5px)'
+                        }
+                    }} key={item} size="small">
                         <item.icon />
                     </IconButton>
                 ))}

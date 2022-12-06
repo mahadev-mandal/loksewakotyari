@@ -35,4 +35,4 @@ export const subjectSelect = [
     { value: 'gk', title: 'GK' },
 ];
 
-export const headerPadding = '0 20px';
+export const headerPadding = '0 15px';

@@ -7,7 +7,7 @@ export default function TemporaryDrawer() {
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={9} lg={9} >
+        <Grid item xs={12} sm={8} >
           <main>
             <section>
               <Paper sx={{ p: 2, mb: 2 }}>
@@ -57,7 +57,7 @@ export default function TemporaryDrawer() {
             </section>
           </main>
         </Grid>
-        <Grid item xs={12} sm={3} lg={3}>
+        <Grid item xs={12} sm={4}>
           <QuestionsList heading="Popular questions" />
         </Grid>
       </Grid>

@@ -6,7 +6,6 @@ import MiniDrawer from '../components/Drawer/MiniDrawer';
 import { Box } from '@mui/material';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { headerPadding } from '../helpers/constants';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -29,7 +28,7 @@ function MyApp({ Component, pageProps }) {
   }
   return <>
     <Header />
-    <Box sx={{ p: headerPadding }}>
+    <Box sx={{ px: { xs: 1.5, sm: 4, md:8} }}>
       <Component {...pageProps} />
     </Box>
     <Footer />

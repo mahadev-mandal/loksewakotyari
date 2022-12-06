@@ -13,7 +13,7 @@ function QuesAns({ data }) {
     return (
         <Paper elevation={3} sx={{ p: 2, my: 1 }}>
             {!data ? 'Please wait loading' : <>
-                <Typography variant='h5' component="h1">{data.question}</Typography>
+                <Typography variant='h6' component="h1">Q. {data.question}</Typography>
                 <Stack rowGap={1} sx={{ ml: 2, mt: 1 }}>
                     {data.options.map((item) => (
                         <Stack key={item} direction="row" spacing={1} alignItems="center">
