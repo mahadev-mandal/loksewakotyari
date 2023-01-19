@@ -3,30 +3,47 @@ import Link from 'next/link'
 import React from 'react'
 import SendIcon from '@mui/icons-material/Send';
 import PropTypes from 'prop-types';
-import useSWR from 'swr';
-import fetchData from '../../controllers/clientControllers/fetchData';
+import { gql, useQuery } from '@apollo/client';
+
+const GET_QUESTIONS = gql`
+ query getQuestions($offset:Int,$limit:Int){
+    getQuestions(offset:$offset, limit:$limit){
+        data{
+            _id
+            question,
+            slug
+        }
+        totalCount
+    }
+ }
+`
 
 function QuestionsList({ heading }) {
-    const {
-        data,
-        error,
-    } = useSWR('/api/dashboard/questions', fetchData);
-    if (error) {
-        return <div>Error occured while fetching popular questions</div>
-    } else if (!data) {
-        return <div>Please wait loading...</div>
+
+    const { data, loading, error} = useQuery(GET_QUESTIONS, {
+        variables: {
+            offset: 0,
+            limit: 20
+        }
+    })
+    
+    if(loading){
+        return 'loading...'
+    }
+    if(error){
+        return 'Something went wrong'
     }
     return (
         <>
             <Typography variant="h5">{heading}</Typography>
             <Divider sx={{ mb: 1 }} />
-            <List component={Paper} style={{ marginTop: 1 }} >
-                {data.data.map((item, index) => (
+            <List component={Paper} style={{ marginTop: 1 }}>
+                {data.getQuestions.data?.map((item, index) => (
                     <ListItem key={index} alignItems="flex-start" spacing={0}>
                         <ListItemIcon style={{ minWidth: 30 }} >
                             <SendIcon fontSize="small" />
                         </ListItemIcon>
-                        <Link href={`/questions/${item._id}`}
+                        <Link href={`/questions/${item.slug}`}
                         >
                             <ListItemText primary={item.question} />
                         </Link>

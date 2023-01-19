@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const employeeSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true,
@@ -55,7 +55,7 @@ const employeeSchema = new mongoose.Schema({
 });
 
 //middleWare.  we have also post method
-employeeSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
     //we will not hash password at time of update, it is hashed only at time new user created
     if (this.isModified('password')) {
         const hashedPassword = await bcrypt.hash(this.password, 10);
@@ -65,7 +65,7 @@ employeeSchema.pre('save', async function (next) {
 })
 
 //generating token
-employeeSchema.methods.generateAuthToken = async function (req, res) {
+userSchema.methods.generateAuthToken = async function () {
     try {
         let token = jwt.sign({
             _id: this._id,
@@ -73,14 +73,14 @@ employeeSchema.methods.generateAuthToken = async function (req, res) {
             name: this.firstName,
             role: this.role,
         },
-            process.env.SECRET_KEY
+            process.env.JWT_SECRET_KEY
         );
         this.tokens = this.tokens.concat({ token: token })
         await this.save();
         return token
     } catch (err) {
-        res.status(500).send('Error occured while generating token')
+        throw new Error(err)
     }
 }
 
-export default mongoose.models.user || mongoose.model('user', employeeSchema);
+export default mongoose.models.user || mongoose.model('user', userSchema);

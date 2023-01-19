@@ -10,8 +10,14 @@ import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import PropTypes from 'prop-types';
+import { useAppContext } from '../../context/appContext';
 
-export default function TemporaryDrawer({open,onClose}) {
+export default function TemporaryDrawer() {
+    const { state, dispatch } = useAppContext();
+
+    const handleClose = () => {
+        dispatch({ type: "SET_HAMBURGER_OPEN", payload: !state.hamburgerOpen, });
+    }
 
     const list = () => (
         <Box
@@ -92,16 +98,16 @@ export default function TemporaryDrawer({open,onClose}) {
                     },
                 }}
                 anchor="left"
-                open={open}
-                onClose={onClose}
+                open={state.hamburgerOpen}
+                onClose={handleClose}
             >
                 {list()}
             </Drawer>
         </div>
     );
-} 
+}
 
-TemporaryDrawer.propTypes={
-    open:PropTypes.bool,
-    onClose:PropTypes.func,
+TemporaryDrawer.propTypes = {
+    open: PropTypes.bool,
+    onClose: PropTypes.func,
 }

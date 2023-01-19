@@ -2,17 +2,16 @@ import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function SingleSelect({ value, onChange, data, error, helperText }) {
+function SingleSelect({ register, data, error, helperText }) {
     return (
         <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">{data.label}</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
-                id={data.id}
-                value={value}
-                label={data.label}
-                onChange={onChange}
                 error={error}
+                defaultValue=''
+                label={data.label}
+                {...register(data.id)}
             >
                 {data.options.map((opt) => (
                     <MenuItem key={opt.label} value={opt.value}>{opt.label}</MenuItem>
@@ -25,10 +24,9 @@ function SingleSelect({ value, onChange, data, error, helperText }) {
     )
 }
 SingleSelect.propTypes = {
-    value: PropTypes.string,
-    onChange: PropTypes.func,
     data: PropTypes.object,
     error: PropTypes.bool,
     helperText: PropTypes.string,
+    register: PropTypes.object,
 }
 export default SingleSelect

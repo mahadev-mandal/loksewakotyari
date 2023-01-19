@@ -23,11 +23,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { gql, useMutation } from '@apollo/client';
 import { useAuthContext } from '../../context/authContext';
 import BackDrop from '../../components/backDrop';
-import useGetMe from '../../hooks/useGetMe';
 
 const LOGIN_USER = gql`
-  mutation getToken($username:String!, $password:String!,){
-    loginUser(username:$username,password:$password,reqRole:"2"){
+  mutation getToken($username:String!, $password:String!){
+    loginUser(username:$username,password:$password){
       code
       success
       message
@@ -47,17 +46,12 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [errMsg, setErrMsg] = useState(null);
 
-  const { data: currUser, loading: loading1 } = useGetMe()
-  if (!loading1 && (currUser?.getLoggedinUser?.role == '2')) {
-    router.push('/cms/dashboard')
-  }
-
   const [loginUser1, { called, loading, error }] = useMutation(LOGIN_USER, {
     update(cache, { data: { loginUser } }) {
-      if (loginUser?.user?.token && loginUser?.user?.role == '2') {
+      if (loginUser?.user?.token && loginUser?.user?.role == '1') {
         let loggedIn = login(loginUser.user);
         if (loggedIn) {
-          router.replace('/cms/dashboard');
+          router.replace('/dashboard');
         }
       } else {
         setErrMsg(loginUser?.message)
@@ -74,6 +68,7 @@ export default function AdminLogin() {
     resolver: yupResolver(normalUserLoginSchema),
     mode: 'onBlur'
   })
+
   if (error) {
     console.log(JSON.stringify(error, null, 2))
     // console.log(error.networkError.result.errors)

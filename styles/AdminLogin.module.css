@@ -28,6 +28,20 @@
   flex-grow: 1;
 }
 
+.a {
+  background: green;
+  width: 200px;
+  transition: 1s;
+  overflow: hidden;
+}
+
+.b {
+  transition: 1s;
+  background: green;
+  width: 200px;
+  overflow: hidden;
+}
+
 .title a {
   color: #0070f3;
   text-decoration: none;
@@ -116,13 +130,16 @@
 }
 
 @media (prefers-color-scheme: dark) {
+
   .card,
   .footer {
     border-color: #222;
   }
+
   .code {
     background: #111;
   }
+
   .logo img {
     filter: invert(1);
   }

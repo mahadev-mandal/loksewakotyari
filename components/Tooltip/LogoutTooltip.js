@@ -4,16 +4,29 @@ import {
     Stack,
     Tooltip,
 } from "@mui/material"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useAuthContext } from "../../context/authContext"
 import BadgeAvatars from '../Drawer/BadgeAvatar'
 
 const ToolTipComp = () => {
+    const { logout } = useAuthContext();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        const loggedOut = logout();
+        if (loggedOut) {
+            router.push('/')
+        }
+    }
     return (
         <Stack spacing={0.5}>
             <Button variant="text" sx={{ height: 20, fontSize: 12, }}>
                 My Profile
             </Button>
-            <Button variant="text" sx={{ height: 20, fontSize: 12, }}>
+            <Button variant="text" sx={{ height: 20, fontSize: 12, }}
+                onClick={handleLogout}
+            >
                 Logout
             </Button>
         </Stack>
@@ -61,7 +74,7 @@ function LogoutTooltip() {
                 }}
             >
                 <Button
-                id="badged-avatar"
+                    id="badged-avatar"
                     onClick={() => setOpen(!open)}
                     variant="contained"
                     color="warning"

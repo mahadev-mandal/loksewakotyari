@@ -6,12 +6,12 @@ const questionSchema = new mongoose.Schema({
         required: true,
         unique: true,
         index: true,
-        trim:true,
+        trim: true,
     },
-    questionId:{
-        type:Number,
-        required:true,
-        unique:true,
+    questionId: {
+        type: Number,
+        required: true,
+        unique: true,
     },
     options: {
         type: Array,
@@ -21,6 +21,12 @@ const questionSchema = new mongoose.Schema({
     },
     description: String,
     keywords: String,
+    level: {
+        type: Array,
+    },
+    relatedSubjects: {
+        type: Array,
+    },
     entryDate: {
         type: String,
         required: true,
@@ -28,7 +34,7 @@ const questionSchema = new mongoose.Schema({
     },
     entryBy: {
         type: String,
-        required: true
+        required: true,
     },
     slug: {
         type: String,
