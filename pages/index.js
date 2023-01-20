@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import SimpleList from '../components/Lists';
 import QuestionsList from '../components/Lists/QuestionsList';
-import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
 import { useAuthContext } from '../context/authContext';
 
 export const GET_CART_ITEMS = gql`
@@ -25,33 +25,12 @@ const GET_LOCATIONS = gql`
       }
   }
   `;
-const ADD_LOCATIONS = gql`
-  mutation AddQuestion(
-  $question: String
-  $questionId: Int
-  $slug: String
-  $options: [String]
-) {
-  addQuestion(
-    question: $question
-    questionId: $questionId
-    slug: $slug
-    options: $options
-  ) {
-    ques {
-      questionId
-      question
-      options
-    }
-  }
-}
-`;
 
 export default function Home() {
   const { user } = useAuthContext();
   console.log(user)
   // const { client, loading, error, data } = useQuery(GET_LOCATIONS);
-  const [addQues, { loading, error, data, reset }] = useLazyQuery(GET_LOCATIONS, {
+  const [addQues, { loading, error }] = useLazyQuery(GET_LOCATIONS, {
     variables: {
       question: "who are you?",
       options: ['a', 'b'],
