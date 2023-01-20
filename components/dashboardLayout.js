@@ -20,7 +20,7 @@ function DashboardLayout({ children }) {
     return 'loading...'
   }
   if (data?.getLoggedinUser?.role !== '1') {
-    typeof window !== 'undefined' && router.replace('/aadaadmin')
+    typeof window !== 'undefined' && router.replace('/login')
     return null
   }
   return (

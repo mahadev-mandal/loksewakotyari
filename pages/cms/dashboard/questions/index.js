@@ -16,7 +16,7 @@ import { useRef } from 'react';
 const tableHeading = ['Question', 'correct option', 'Date', 'Edit', 'Delete', 'View'];
 const dataHeading = ['question', 'correctOption', 'date', 'edit', 'delete'];
 
-const GET_QUESTIONS = gql`
+export const GET_QUESTIONS = gql`
 	query getQuestions($offset: Int, $limit: Int){
 		getQuestions(offset: $offset, limit: $limit){
 				data{
@@ -54,7 +54,6 @@ function Questions() {
 	})
 	const [triggerDelete, { loading: loading1 }] = useMutation(DELETE_QUESTIONS, {
 		update(cache, { data: { deleteQuestions } }) {
-			
 			customToast.dataToast(deleteQuestions);
 			if (deleteQuestions.success) {
 				customToast.dataToast(deleteQuestions);
@@ -64,8 +63,8 @@ function Questions() {
 			customToast.errorToast(err)
 		},
 		refetchQueries: [
-			{query: GET_QUESTIONS}, // DocumentNode object parsed with gql
-			'deleteQuestions' // Query name
+			{ query: GET_QUESTIONS },
+			'getQuestions'
 		],
 	})
 
@@ -119,7 +118,7 @@ function Questions() {
 				</Stack>
 			</Backdrop>
 			<Stack direction="row" spacing={0.5} sx={{ mb: 0.2 }}>
-				<Link href="/dashboard/questions/add">
+				<Link href="/cms/dashboard/questions/add">
 					<Button variant="contained" color="warning">Add Question</Button>
 				</Link>
 				<Button

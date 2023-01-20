@@ -1,13 +1,16 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { Backdrop, Button, CircularProgress, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import React, { useState } from 'react'
+import { useRef } from 'react';
 import SimpleTable from '../../../../components/Tables/SimpleTable'
+import useToastHandler from '../../../../hooks/useToastHandler';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const tableHeading = ['First Name', 'Last Name', 'Mobile', 'email', 'Delete', 'View'];
-const dataHeading = ['firstName', 'lastName', 'mobile', 'email', 'delete', 'view'];
+const tableHeading = ['First Name', 'Last Name', 'Mobile', 'email', 'Role', 'Delete', 'View'];
+const dataHeading = ['firstName', 'lastName', 'mobile', 'email', 'role', 'delete', 'view'];
 
-const GET_USERS = gql`
+export const GET_USERS = gql`
   query getUsers($offset:Int,$limit:Int){
     getUsers(offset:$offset,limit:$limit){
       data{
@@ -16,20 +19,48 @@ const GET_USERS = gql`
         lastName
         mobile
         email
+        role
       }
       totalCount
     }
   }
+`
+const DELETE_USER = gql`
+  mutation deleteUsers($ids:[String]){
+    deleteUsers(ids:$ids){
+      code
+      success
+      message
+    }
+  }
+
 `
 
 function Users() {
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
+  const toastId = useRef(null);
+  const customToast = useToastHandler(toastId);
 
   const { data, loading, error } = useQuery(GET_USERS, {
     variables: { offset: page, limit: rowsPerPage }
   });
+  const [triggerDelete] = useMutation(DELETE_USER, {
+    update(cache, { data: { deleteUsers } }) {
+      customToast.dataToast(deleteUsers);
+      if (deleteUsers.success) {
+        customToast.dataToast(deleteUsers);
+      }
+    },
+    onError: err => {
+      customToast.errorToast(err)
+    },
+    refetchQueries: [
+      { query: GET_USERS },
+      'getUsers'
+    ],
+  })
 
 
   const handleSelectChange = (event, row) => {
@@ -55,6 +86,14 @@ function Users() {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(parseInt(0))
   }
+  const handleDelete = () => {
+    customToast.loadingToast();
+    triggerDelete({
+      variables: {
+        ids: selected.map((item) => item._id)
+      }
+    })
+  }
 
   if (error) {
     console.log(JSON.stringify(error, null, 2))
@@ -72,10 +111,18 @@ function Users() {
         </Stack>
       </Backdrop>
       <Stack direction="row" spacing={0.5} sx={{ mb: 0.2 }}>
-        <Link href="/dashboard/users/add">
+        <Link href="/cms/dashboard/users/add">
           <Button variant="contained" color="warning">Add user</Button>
         </Link>
-        <Button variant="contained" color="warning">Manage user</Button>
+        <Button
+          variant="contained"
+          color="warning"
+          startIcon={<DeleteIcon />}
+          onClick={handleDelete}
+          disabled={!selected.length > 0}
+        >
+          {selected.length > 0 && selected.length} Delete
+        </Button>
       </Stack>
       <SimpleTable
         tableHeading={tableHeading}

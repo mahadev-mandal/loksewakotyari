@@ -23,10 +23,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { gql, useMutation } from '@apollo/client';
 import { useAuthContext } from '../../context/authContext';
 import BackDrop from '../../components/backDrop';
+import useGetMe from '../../hooks/useGetMe';
 
 const LOGIN_USER = gql`
   mutation getToken($username:String!, $password:String!){
-    loginUser(username:$username,password:$password){
+    loginUser(username:$username,password:$password,reqRole:"1"){
       code
       success
       message
@@ -45,6 +46,11 @@ export default function AdminLogin() {
   const { login } = useAuthContext()
   const [showPassword, setShowPassword] = useState(false);
   const [errMsg, setErrMsg] = useState(null);
+
+  const { data: currUser, loading: loading1 } = useGetMe()
+  if (!loading1 && (currUser?.getLoggedinUser?.role == '1')) {
+    router.push('/dashboard')
+  }
 
   const [loginUser1, { called, loading, error }] = useMutation(LOGIN_USER, {
     update(cache, { data: { loginUser } }) {

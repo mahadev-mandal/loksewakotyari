@@ -8,8 +8,6 @@ import userModel from '../../../models/userSchema'
 import { GraphQLError } from 'graphql';
 import jwt from 'jsonwebtoken';
 
-db_conn();
-
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -18,6 +16,7 @@ const server = new ApolloServer({
 
 export default startServerAndCreateNextHandler(server, {
   context: async (req) => {
+    db_conn();
     const token = req.headers.authorization.split('Bearer ')[1];
     if (token) {
       const tokenPayload = jwt.verify(token, process.env.JWT_SECRET_KEY, function (err, decoded) {

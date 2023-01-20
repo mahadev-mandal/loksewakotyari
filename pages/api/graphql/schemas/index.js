@@ -81,17 +81,16 @@ export const typeDefs = `#graphql
     message: String
     question:Question
   }
-  type DeleteQuestions implements MutationResponse{
-    code: String
-    success: Boolean
-    message: String
-    question:Question
-  }
   type AddUser implements MutationResponse{
     code: String
     success: Boolean
     message: String
     users:User
+  }
+  type Delete implements MutationResponse{
+    code: String
+    success: Boolean
+    message: String
   }
 
   type Mutation{
@@ -108,7 +107,7 @@ export const typeDefs = `#graphql
       relatedSubjects:[String]
     ): AddQuestion,
 
-    deleteQuestions(ids:[String]):DeleteQuestions
+    deleteQuestions(ids:[String]):Delete
 
     addUser(
       firstName:String!,
@@ -120,6 +119,8 @@ export const typeDefs = `#graphql
       password:String!,
       profilePicPath:String,
     ):AddUser
+
+    deleteUsers(ids:[String]):Delete
 
     loginUser(username:String!,password:String!,reqRole:String):LoginUser 
   }

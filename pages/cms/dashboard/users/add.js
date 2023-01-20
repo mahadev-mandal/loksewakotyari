@@ -6,6 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { gql, useMutation } from '@apollo/client';
 import useToastHandler from '../../../../hooks/useToastHandler';
 import React from 'react';
+import { GET_USERS } from '.';
 
 const user = [
   { label: "First Name", type: 'text', id: 'firstName' },
@@ -80,6 +81,10 @@ function AddUser() {
     onError: err => {
       customToast.errorToast(err)
     },
+    refetchQueries: [
+      { query: GET_USERS },
+      'getUsers'
+    ],
   })
   const handleFormSubmit = (d) => {
     customToast.loadingToast();

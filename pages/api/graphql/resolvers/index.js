@@ -76,13 +76,20 @@ export const resolvers = {
     },
     deleteQuestions: async (parent, args) => {
       const { ids } = args;
-      console.log(ids)
       try {
         const result = await questionModel.deleteMany({ _id: { $in: ids } });
-        return {
-          code: 200,
-          success: true,
-          message: `${result?.length} deleted sucessfully`,
+        if(result.deletedCount>0){
+          return {
+            code: 200,
+            success: true,
+            message: `${result?.deletedCount} questions deleted sucessfully.`,
+          }
+        }else{
+          return {
+            code: 409,
+            success: true,
+            message: `Something went wrong.`,
+          }
         }
       } catch (err) {
         return {
@@ -113,6 +120,31 @@ export const resolvers = {
           success: false,
           message: err?.message ?? 'Something went wrong.',
           question: {}
+        }
+      }
+    },
+    deleteUsers:async(parent, args)=>{
+      const { ids } = args;
+      try {
+        const result = await userModel.deleteMany({ _id: { $in: ids } });
+        if(result.deletedCount>0){
+          return {
+            code: 200,
+            success: true,
+            message: `${result?.deletedCount} users deleted sucessfully.`,
+          }
+        }else{
+          return {
+            code: 409,
+            success: true,
+            message: `Something went wrong.`,
+          }
+        }
+      } catch (err) {
+        return {
+          code: 500,
+          success: false,
+          message: err?.message ?? 'Something went wrong.',
         }
       }
     },

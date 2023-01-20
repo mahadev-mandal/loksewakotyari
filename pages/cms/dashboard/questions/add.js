@@ -10,6 +10,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { gql, useMutation } from '@apollo/client';
 import getSlugifiedStr from '../../../../controllers/clientControllers/getSlugifiedStr';
 import useToastHandler from '../../../../hooks/useToastHandler';
+import { GET_QUESTIONS } from '.';
 const RichTextEditor = dynamic(() => import('../../../../components/RichTextEditor'), { ssr: false });
 
 const initialValues = {
@@ -83,6 +84,10 @@ function AddQuestion() {
 		onError: err => {
 			customToast.errorToast(err)
 		},
+		refetchQueries: [
+			{query: GET_QUESTIONS}, // DocumentNode object parsed with gql
+			'getQuestions' // Query name
+		],
 
 	})
 
