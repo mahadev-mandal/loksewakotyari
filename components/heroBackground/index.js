@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 function HeroBackground({ image, imageSrc, video, videoSrc }) {
+  console.log(image,imageSrc,video,videoSrc)
   return (
     <div>HeroBackground</div>
   )
