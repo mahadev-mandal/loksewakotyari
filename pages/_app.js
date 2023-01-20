@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import client from '../lib/apolloClient';
 import { ApolloProvider, } from '@apollo/client';
 import CmsLayout from '../components/cmsLayout';
-import Layout from '../components/Layout';
+import Layout from '../components/layout';
 import { AppWrapper } from '../context/appContext';
 import { AuthWrapper } from '../context/authContext';
 import DashboardLayout from '../components/dashboardLayout';
