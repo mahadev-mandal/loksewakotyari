@@ -114,7 +114,7 @@ function Questions() {
 			>
 				<Stack alignItems="center" justifyContent="center" sx={{ mt: 3 }}>
 					<CircularProgress color="secondary" />
-					<Typography variant='h6'>Wait loding...</Typography>
+					<Typography variant='h6'>Wait loading...</Typography>
 				</Stack>
 			</Backdrop>
 			<Stack direction="row" spacing={0.5} sx={{ mb: 0.2 }}>

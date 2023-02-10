@@ -3,7 +3,6 @@ import { Grid, Paper, Typography } from '@mui/material';
 import SimpleList from '../components/Lists';
 import QuestionsList from '../components/Lists/QuestionsList';
 import { gql, useLazyQuery } from '@apollo/client';
-import { useAuthContext } from '../context/authContext';
 
 export const GET_CART_ITEMS = gql`
   query GetCartItems {
@@ -27,9 +26,6 @@ const GET_LOCATIONS = gql`
   `;
 
 export default function Home() {
-  const { user } = useAuthContext();
-  console.log(user)
-  // const { client, loading, error, data } = useQuery(GET_LOCATIONS);
   const [addQues, { loading, error }] = useLazyQuery(GET_LOCATIONS, {
     variables: {
       question: "who are you?",

@@ -1,16 +1,12 @@
-import questionModel from '../../../../models/questionSchema'
-import userModel from '../../../../models/userSchema'
+import questionModel from '../../../../models/questionSchema';
+import userModel from '../../../../models/userSchema';
+import questionDetails from '../../../../models/questionDetailsSchema';
 import { dateScalar } from '../customScalars';
 import bcrypt from 'bcrypt';
 import { GraphQLError } from 'graphql';
 
 export const resolvers = {
-  // Abc: {
-  //   __resolveType(obj) {
-  //     if (obj.name) return 'Entryby'
-  //     return 'Option'
-  //   }
-  // },
+
   Date: dateScalar,
   Query: {
     getQuestions: async (parent, args) => {
@@ -33,6 +29,16 @@ export const resolvers = {
         throw new GraphQLError(err)
       }
     },
+    getSearchResults: async (parent, args) => {
+      const { searchText, limit } = args;
+      try {
+        const data = await questionModel.find({ $text: { $search: searchText } }).limit(limit)
+        return { data }
+      } catch (err) {
+        console.log(err)
+        throw new GraphQLError(err)
+      }
+    },
     getUsers: async (parent, args) => {
       const { offset, limit } = args
       try {
@@ -47,6 +53,16 @@ export const resolvers = {
     getLoggedinUser(root, args, context) {
       // console.log(context.token)
       return context.user
+    },
+    getQuestionDetails: async (root, args) => {
+      const { questionId } = args;
+      try {
+        const data = await questionDetails.find({ questionId });
+        const totalCount = await questionDetails.find({ questionId });
+        return { data, totalCount }
+      } catch (err) {
+        throw new GraphQLError(err)
+      }
     }
 
   },
@@ -78,13 +94,13 @@ export const resolvers = {
       const { ids } = args;
       try {
         const result = await questionModel.deleteMany({ _id: { $in: ids } });
-        if(result.deletedCount>0){
+        if (result.deletedCount > 0) {
           return {
             code: 200,
             success: true,
             message: `${result?.deletedCount} questions deleted sucessfully.`,
           }
-        }else{
+        } else {
           return {
             code: 409,
             success: true,
@@ -123,17 +139,17 @@ export const resolvers = {
         }
       }
     },
-    deleteUsers:async(parent, args)=>{
+    deleteUsers: async (parent, args) => {
       const { ids } = args;
       try {
         const result = await userModel.deleteMany({ _id: { $in: ids } });
-        if(result.deletedCount>0){
+        if (result.deletedCount > 0) {
           return {
             code: 200,
             success: true,
             message: `${result?.deletedCount} users deleted sucessfully.`,
           }
-        }else{
+        } else {
           return {
             code: 409,
             success: true,
@@ -152,7 +168,8 @@ export const resolvers = {
     loginUser: async (root, args) => {
       try {
         const { username, password, reqRole } = args
-        const user = await userModel.findOne({ email: username, role: reqRole },)
+        const user = await userModel.findOne({ email: username, role: reqRole })
+
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (passwordMatch) {
           const token = await user.generateAuthToken();
@@ -179,6 +196,47 @@ export const resolvers = {
         }
       }
 
+    },
+    addQuestionDetails: async (root, args) => {
+      const { question_id, user_id, thumbType, comment } = args;
+      try {
+        const update = {};
+        if (thumbType) {
+          update.thumb = { type: thumbType, date: Date.now() }
+        }
+        if (comment) {
+          update.comment = { text: comment, date: Date.now() }
+        }
+
+        const result = await questionDetails.findOneAndUpdate(
+          { question_id, user_id },
+          update,
+        );
+
+        if (!result) {
+          await questionDetails.create({ question_id, user_id });
+        }
+        await questionDetails.findOneAndUpdate({ question_id, user_id }, {
+          $push: {
+            likes: {
+              user_id: 'jkjdd',
+
+            }
+          }
+        });
+        return {
+          code: 200,
+          success: true,
+          message: `updated success`,
+        }
+      } catch (err) {
+        console.log(err)
+        return {
+          code: 500,
+          success: false,
+          message: err?.message ?? 'Something went wrong.',
+        }
+      }
     }
   },
 

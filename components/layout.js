@@ -8,18 +8,18 @@ import PropTypes from 'prop-types';
 function Layout({ children }) {
   
   return (
-    <>
+    <Box >
       <Box sx={{ position: 'sticky', top: 0, left: 0, zIndex: 1200 }}>
         <Header />
         <TemporaryDrawer />
       </Box>
       {children}
       <Footer />
-    </>
+    </Box>
   )
 }
 
 Layout.propTypes = {
-  children: PropTypes.object,
+  children: PropTypes.array,
 }
 export default Layout

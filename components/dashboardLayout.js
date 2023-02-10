@@ -19,7 +19,7 @@ function DashboardLayout({ children }) {
   if (loading) {
     return 'loading...'
   }
-  if (data?.getLoggedinUser?.role !== '1') {
+  if (data?.getLoggedinUser?.role !== '0') {
     typeof window !== 'undefined' && router.replace('/login')
     return null
   }

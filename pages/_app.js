@@ -10,19 +10,22 @@ import { AuthWrapper } from '../context/authContext';
 import DashboardLayout from '../components/dashboardLayout';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ThemeWrapper } from '../context/themeContext';
+
 
 function MyApp({ Component, pageProps }) {
-
   const router = useRouter();
   if (router.pathname.startsWith('/cms')) {
     return (
       <ApolloProvider client={client}>
         <AuthWrapper>
           <AppWrapper>
-            <CmsLayout>
-              <Component {...pageProps} />
-              <ToastContainer />
-            </CmsLayout>
+            <ThemeWrapper>
+              <CmsLayout>
+                <Component {...pageProps} />
+                <ToastContainer />
+              </CmsLayout>
+            </ThemeWrapper>
           </AppWrapper>
         </AuthWrapper>
       </ApolloProvider>
@@ -32,10 +35,12 @@ function MyApp({ Component, pageProps }) {
       <ApolloProvider client={client}>
         <AuthWrapper>
           <AppWrapper>
-            <DashboardLayout>
-              <Component {...pageProps} />
-              <ToastContainer />
-            </DashboardLayout>
+            <ThemeWrapper>
+              <DashboardLayout>
+                <Component {...pageProps} />
+                <ToastContainer />
+              </DashboardLayout>
+            </ThemeWrapper>
           </AppWrapper>
         </AuthWrapper>
       </ApolloProvider>
@@ -46,10 +51,12 @@ function MyApp({ Component, pageProps }) {
     <ApolloProvider client={client}>
       <AuthWrapper>
         <AppWrapper>
-          <Layout>
-            <Component {...pageProps} />
-            <ToastContainer />
-          </Layout>
+          <ThemeWrapper>
+            <Layout>
+              <Component {...pageProps} />
+              <ToastContainer />
+            </Layout>
+          </ThemeWrapper>
         </AppWrapper>
       </AuthWrapper>
     </ApolloProvider>

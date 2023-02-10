@@ -1,93 +1,136 @@
-import { Autocomplete, Divider, InputAdornment, Paper, TextField } from '@mui/material';
-import React, { useState } from 'react'
+import { Box, CircularProgress, ClickAwayListener, Divider, IconButton, InputAdornment, List, ListItemButton, Paper, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react'
 import SearchIcon from "@mui/icons-material/Search";
 import { useRouter } from 'next/router';
-const data = [
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
-    { title: 'mahadev mandal' },
+import { gql, useLazyQuery } from '@apollo/client';
+import Link from 'next/link';
+import ClearIcon from '@mui/icons-material/Clear';
 
-]
-
-function SearchField() {
-    const router = useRouter()
-    const [open, setOpen] = useState(false);
-    const [searchText, setSearchText] = useState('');
-
-    const handleSelectedChange = (event, value) => {
-        if (value) {
-            if (typeof (value) === 'object') {
-                router.push(`/search?pid=${value._id}`)
-            } else {
-                router.push(`/search?searchText=${searchText}&pid`)
+const GET_SEARCH_RESULTS = gql`
+    query getSearchResults($searchText:String, $offset:Int, $limit:Int){
+        getSearchResults(searchText:$searchText, offset:$offset, limit:$limit){
+            data{
+            _id
+            question
+            slug
             }
         }
     }
-    return (
-        <Autocomplete
-            id="free-solo-demo"
-            // sx={{ width: 200 }}
-            componentsProps={{
-                paper: {
-                    sx: {
-                        borderRadius: 0,
-                        boxSizing:'border-box'
-                    }
-                }
-            }}
-            freeSolo
-            size="small"
-            open={open}
-            onInputChange={(_id, value) => {
-                if (value.length === 0) {
-                    if (open) setOpen(false);
-                } else {
-                    if (!open) setOpen(true);
-                }
-            }}
-            onClose={() => setOpen(false)}
-            onChange={(e, v) => handleSelectedChange(e, v)}
-            options={data ? data.length >= 1 ? data.map((option) => ({ _id: option._id, label: option.title })) : [] : []}
-            renderInput={(params) =>
-                <Paper
-                    sx={{
-                        borderRadius: open ? '7px 7px 0 0' : '20px 20px',
-                        display: "flex",
-                        alignItems: "center",
-                        width: "100%",
-                        // height: { sm: 40, xs: 30 },
-                    }}
-                >
-                    <TextField
-                        {...params}
-                        sx={{
-                            "& fieldset": { border: 'none' },
-                        }}
-                        placeholder="What are you lookin for?"
-                        onChange={e => setSearchText(e.target.value)}
-                        InputProps={{
-                            ...params.InputProps,
-                            startAdornment: (
-                                <InputAdornment position="end">
-                                    <SearchIcon />
-                                    <Divider orientation='vertical' sx={{ height: 28, m: 0.5 }} />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
+`;
 
-                </Paper>}
-        />
-    )
+function SearchField() {
+	const router = useRouter()
+	const [open, setOpen] = useState(true)
+	const [searchText, setSearchText] = useState('');
+
+	const [searchText1, { data, loading, refetch }] = useLazyQuery(GET_SEARCH_RESULTS, {
+		variables: {
+			offset: 0,
+			limit: 10,
+		}
+	});
+
+	useEffect(() => {
+		searchText && refetch({
+			searchText: '',
+
+		})
+	}, [router.asPath])
+
+	const handleFormSubmit = (event) => {
+		event.preventDefault();
+
+		router.push(`/questions?search=${searchText ?? ''}`);
+	}
+	const handleSearchTextChange = (e) => {
+		setSearchText(e.target.value ?? '')
+		!data && searchText1({
+			variables: {
+				searchText: e.target.value ?? ''
+			}
+		})
+		data && refetch({
+			searchText: e.target.value ?? ''
+		})
+	}
+	const handleClearClick = () => {
+		setSearchText('');
+		refetch({
+			searchText: ''
+		})
+	}
+
+	return (<ClickAwayListener onClickAway={() => setOpen(false)}>
+		<Box sx={{ position: 'relative' }}>
+			<form onSubmit={handleFormSubmit}>
+				<Paper
+					sx={{
+						borderRadius: (data?.getSearchResults?.data?.length > 0 && open)
+							? '7px 7px 0 0' : '20px 20px',
+						display: "flex",
+						alignItems: "center",
+						height: 40,
+						width: "100%",
+					}}
+				>
+					<TextField
+						fullWidth
+						placeholder="What are you lookin for?"
+						onFocus={() => setOpen(true)}
+						value={searchText}
+						autoComplete="off"
+						sx={{
+							"& fieldset": { border: 'none' },
+						}}
+						onChange={handleSearchTextChange}
+						InputProps={{
+							startAdornment: (
+								<InputAdornment position="start">
+									<Box sx={{ width: 25, display: 'flex', alignItems: "center" }}>
+										{loading ? <CircularProgress color="secondary" size={15} /> : <SearchIcon />}
+									</Box>
+									<Divider orientation='vertical' sx={{ height: 28, m: 0.5 }} />
+								</InputAdornment>
+							),
+							endAdornment: searchText && (
+								<InputAdornment position="end">
+									<IconButton sx={{ p: 0 }} size="small" onClick={handleClearClick}>
+										<ClearIcon />
+									</IconButton>
+								</InputAdornment>
+							),
+						}}
+					/>
+				</Paper>
+			</form>
+			{(data?.getSearchResults?.data.length > 0 && open) && <Paper
+				sx={{
+					width: "100%",
+					position: 'absolute',
+					top: 40,
+					left: 0,
+					borderRadius: '0 0 7px 7px',
+				}}
+			>
+				<List>
+					{data?.getSearchResults?.data.map((item, index) => (
+						<ListItemButton key={item.slug}>
+							<Link href={`/questions/${item.slug}`}
+								style={{
+									whiteSpace: 'nowrap',
+									overflow: 'hidden',
+									textOverflow: 'ellipsis'
+								}}
+							>
+								{index + 1}. {item.question}
+							</Link>
+						</ListItemButton>
+					))}
+				</List>
+			</Paper>}
+		</Box>
+	</ClickAwayListener>
+	)
 }
 
 export default SearchField

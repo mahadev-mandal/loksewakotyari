@@ -29,6 +29,12 @@ export const typeDefs = `#graphql
     status:Boolean!
     profilePicPath:String
   }
+  type QuestionDetail{
+    _id:ID!
+    likes:Int
+    dislikes:Int
+    comment:Int
+  }
   type GetQuestions{
     totalCount:Int
     data:[Question]
@@ -36,6 +42,10 @@ export const typeDefs = `#graphql
   type GetUsers{
     totalCount:Int
     data:[User]
+  }
+  type GetSearchResults{
+    totalCount:Int
+    data:[Question]
   }
   # type LoggedinUser {
   #   firstName:String
@@ -48,7 +58,9 @@ export const typeDefs = `#graphql
     getQuestions(offset:Int,limit:Int): GetQuestions,
     getQuestion(slug:String):Question
     getUsers(offset:Int,limit:Int):GetUsers,
-    getLoggedinUser:User,   
+    getLoggedinUser:User,
+    getSearchResults(searchText:String,offset:Int, limit:Int):GetSearchResults, 
+    getQuestionDetails(questionId:String!):QuestionDetail,
   }
 
   enum AllowedColor {
@@ -92,6 +104,11 @@ export const typeDefs = `#graphql
     success: Boolean
     message: String
   }
+  type AddQuestionDetail implements MutationResponse{
+    code:String
+    success:Boolean
+    message:String
+  }
 
   type Mutation{
     addQuestion (
@@ -123,6 +140,13 @@ export const typeDefs = `#graphql
     deleteUsers(ids:[String]):Delete
 
     loginUser(username:String!,password:String!,reqRole:String):LoginUser 
+
+    addQuestionDetails(
+      question_id:String!,
+      user_id:String!,
+      thumbType:String,
+      comment:String,
+    ):AddQuestionDetail
   }
       
 `;

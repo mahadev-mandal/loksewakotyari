@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import Head from 'next/head'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -24,10 +24,11 @@ import { gql, useMutation } from '@apollo/client';
 import { useAuthContext } from '../../context/authContext';
 import BackDrop from '../../components/backDrop';
 import useGetMe from '../../hooks/useGetMe';
+import useToastHandler from '../../hooks/useToastHandler';
 
 const LOGIN_USER = gql`
   mutation getToken($username:String!, $password:String!){
-    loginUser(username:$username,password:$password,reqRole:"1"){
+    loginUser(username:$username,password:$password,reqRole:"0"){
       code
       success
       message
@@ -46,22 +47,28 @@ export default function AdminLogin() {
   const { login } = useAuthContext()
   const [showPassword, setShowPassword] = useState(false);
   const [errMsg, setErrMsg] = useState(null);
+  const [loggingIn, setLoggingIn] = useState(false);
+  const toastId = useRef(null);
+  const customToast = useToastHandler(toastId);
 
   const { data: currUser, loading: loading1 } = useGetMe()
-  if (!loading1 && (currUser?.getLoggedinUser?.role == '1')) {
+  if (!loading1 && (currUser?.getLoggedinUser?.role == '0')) {
     router.push('/dashboard')
   }
 
   const [loginUser1, { called, loading, error }] = useMutation(LOGIN_USER, {
     update(cache, { data: { loginUser } }) {
-      if (loginUser?.user?.token && loginUser?.user?.role == '1') {
+      if (loginUser?.user?.token && loginUser?.user?.role == '0') {
         let loggedIn = login(loginUser.user);
         if (loggedIn) {
           router.replace('/dashboard');
+          customToast.dataToast(loginUser, 'Redirecting to dashboard.')
+          setLoggingIn(false);
         }
       } else {
         setErrMsg(loginUser?.message)
-        console.log(loginUser?.message)
+        customToast.dataToast(loginUser1, loginUser?.message);
+        setLoggingIn(false);
       }
     },
   })
@@ -74,6 +81,15 @@ export default function AdminLogin() {
     resolver: yupResolver(normalUserLoginSchema),
     mode: 'onBlur'
   })
+
+
+  const handleFormSubmit = (data) => {
+    customToast.loadingToast('Wait logging in...');
+    setLoggingIn(true);
+    loginUser1(
+      { variables: data }
+    )
+  }
 
   if (error) {
     console.log(JSON.stringify(error, null, 2))
@@ -94,7 +110,7 @@ export default function AdminLogin() {
         background: 'rgb(240, 240, 240, 0.5)'
       }}>
         <AccountCircleIcon sx={{ fontSize: 80, m: 'auto', display: 'block' }} /> <br />
-        <form>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <TextField
             fullWidth
             variant='outlined'
@@ -134,11 +150,9 @@ export default function AdminLogin() {
           <Button
             fullWidth
             variant="outlined"
-            onClick={handleSubmit(data => loginUser1(
-              { variables: data }
-            ))}
+            type='submit'
           >
-            Login
+            {loggingIn ? 'Logging in...' : 'Login'}
           </Button><br /><br />
         </form>
       </Paper>

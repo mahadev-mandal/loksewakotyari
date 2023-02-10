@@ -24,15 +24,14 @@ function Question() {
 		variables: {
 			slug
 		}
-	})
+	});
 
-	if(loading){
+	if (loading) {
 		return 'loading...'
 	}
-	if(error){
+	if (error) {
 		return 'Something went wrong'
 	}
-	console.log(data)
 	return (
 		<Grid container spacing={2} rowGap={2}>
 			<Grid item xs={12} md={8}>
@@ -44,7 +43,7 @@ function Question() {
 			<Grid item xs={12} md={4}>
 				<QuestionsList heading="Popular questions" />
 			</Grid>
-			<Grid item sx={12} md={8}>
+			<Grid item xs={12} md={8}>
 
 			</Grid>
 		</Grid>

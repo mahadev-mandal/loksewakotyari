@@ -7,14 +7,14 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import ShareIcon from '@mui/icons-material/Share';
 
-
 const social = [
-    { icon: FacebookIcon, link: '/' },
-    { icon: YouTubeIcon, link: '/' },
-    { icon: LinkedInIcon, link: '/' },
-    { icon: InstagramIcon, link: '/' },
-    { icon: TwitterIcon, link: '/' },
-    { icon: ShareIcon, link: '/' },
+    { icon: FacebookIcon, link: 'https://www.facebook.com/' },
+    { icon: YouTubeIcon, link: 'https://www.youtube.com/' },
+    { icon: LinkedInIcon, link: 'https://in.linkedin.com/' },
+    { icon: InstagramIcon, link: 'https://www.instagram.com/' },
+    { icon: TwitterIcon, link: 'https://twitter.com/' },
+    { icon: ShareIcon, link: '/share' },
+
 ]
 
 function ShareQuiestion() {
@@ -27,7 +27,7 @@ function ShareQuiestion() {
                         '&:hover': {
                             transform: 'translateY(-5px)'
                         }
-                    }} key={item} size="small">
+                    }} key={item.link} size="small">
                         <item.icon />
                     </IconButton>
                 ))}

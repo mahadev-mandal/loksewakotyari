@@ -93,7 +93,7 @@ function AddUser() {
     )
   }
   return (
-    <>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <Stack spacing={1.5}>
         {user.map((usr) => (
           usr.type == 'select' ? <SingleSelect
@@ -115,12 +115,12 @@ function AddUser() {
         ))}
         <Button
           variant="contained"
-          onClick={handleSubmit(handleFormSubmit)}
+          type='submit'
         >
           Add User
         </Button>
       </Stack>
-    </>
+    </form>
   )
 }
 

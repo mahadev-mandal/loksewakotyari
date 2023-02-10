@@ -13,11 +13,11 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 
 
 const social = [
-    { icon: FacebookIcon, link: '/' },
-    { icon: YouTubeIcon, link: '/' },
-    { icon: LinkedInIcon, link: '/' },
-    { icon: InstagramIcon, link: '/' },
-    { icon: TwitterIcon, link: '/' },
+    { icon: FacebookIcon, link: 'https://www.facebook.com/' },
+    { icon: YouTubeIcon, link: 'https://www.youtube.com/' },
+    { icon: LinkedInIcon, link: 'https://in.linkedin.com/' },
+    { icon: InstagramIcon, link: 'https://www.instagram.com/' },
+    { icon: TwitterIcon, link: 'https://twitter.com/' },
 ]
 
 const arr = [

@@ -5,7 +5,8 @@ export default function db_conn() {
         console.log("Alrady connected")
     } else {
         mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true
+            useNewUrlParser: true, 
+            useUnifiedTopology: true 
         })
         mongoose.connection.on("connected", () => {
             console.log('connection sucessfully stablished')

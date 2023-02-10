@@ -9,12 +9,22 @@ import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
 import Menu from './Menu';
 import { useAppContext } from '../../context/appContext';
+import { useThemeContext } from '../../context/themeContext';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 function Header() {
     const { state, dispatch } = useAppContext();
+    const { state: themeState, dispatch: themeDispatch } = useThemeContext();
 
     const handleHambergClick = () => {
         dispatch({ type: "SET_HAMBURGER_OPEN", payload: !state.hamburgerOpen, });
+    }
+    const handleThemeToggle = () => {
+        if (themeState.themeName == 'lightTheme') {
+            themeDispatch({ type: 'SET_DARK_THEME' });
+        } else {
+            themeDispatch({ type: 'SET_LIGHT_THEME' });
+        }
     }
 
     return (
@@ -43,7 +53,11 @@ function Header() {
                     </Link> */}
                         <Box sx={{ width: 200, background: 'blue' }}></Box>
                         <Box sx={{ display: { sm: 'none', xs: 'inline' } }}>
-                            <Brightness4Icon />
+                            <IconButton onClick={handleThemeToggle}>
+                                {themeState.themeName == 'darkTheme' ?
+                                    <Brightness4Icon /> : <DarkModeIcon />
+                                }
+                            </IconButton>
                         </Box>
                     </Stack>
 
@@ -53,8 +67,10 @@ function Header() {
                 </Grid>
                 <Grid item display={{ sm: "inline-block", xs: "none" }}>
                     <Stack direction="row" alignItems="center">
-                        <IconButton>
-                            <Brightness4Icon />
+                        <IconButton onClick={handleThemeToggle}>
+                            {themeState.themeName == 'darkTheme' ?
+                                <Brightness4Icon /> : <DarkModeIcon />
+                            }
                         </IconButton>
                         <IconButton>
                             <PersonIcon />

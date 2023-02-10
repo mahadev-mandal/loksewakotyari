@@ -79,13 +79,14 @@ function AddQuestion() {
 			if (addQuestion.success) {
 				reset();
 				setSlug('');
+				setTextEditorValue('')
 			}
 		},
 		onError: err => {
 			customToast.errorToast(err)
 		},
 		refetchQueries: [
-			{query: GET_QUESTIONS}, // DocumentNode object parsed with gql
+			{ query: GET_QUESTIONS }, // DocumentNode object parsed with gql
 			'getQuestions' // Query name
 		],
 
@@ -98,14 +99,14 @@ function AddQuestion() {
 	}
 
 	const handleFormSubmit = (d) => {
-		customToast.loadingToast();
+		customToast.loadingToast('Please wait saving...');
 		addQuestion(
 			{ variables: { ...d, description: textEditorValue, slug } }
 		)
 	}
 
 	return (
-		<form>
+		<form onSubmit={handleSubmit(handleFormSubmit)}>
 			<Stack spacing={1.5}>
 				<TextField
 					variant="outlined"
@@ -171,7 +172,7 @@ function AddQuestion() {
 				// helperText={errors?.slug?.message}
 				/>
 				<Button
-					onClick={handleSubmit(handleFormSubmit)}
+					type='submit'
 					fullWidth
 					variant="contained"
 				>Submit</Button>

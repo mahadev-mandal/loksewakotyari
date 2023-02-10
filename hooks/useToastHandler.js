@@ -3,9 +3,9 @@ import handleErrors from "../controllers/clientControllers/handleErrors";
 import { toastConfig } from "../helpers/constants";
 
 const useToastHandler = (ref) => {
-  const loadingToast = () => {
+  const loadingToast = (msg) => {
     if (!toast.isActive(ref.current)) {
-      ref.current = toast('Please wait saving...', {
+      ref.current = toast(msg ?? 'Please wait loading...', {
         ...toastConfig,
         theme: 'light',
         isLoading: true,
@@ -13,11 +13,11 @@ const useToastHandler = (ref) => {
     }
   }
 
-  const dataToast = (data) => {
+  const dataToast = (data, msg) => {
     if (data) {
       toast.update(ref.current, {
         ...toastConfig,
-        render: data?.message,
+        render: msg ?? data?.message,
         type: data.success ? 'success' : 'error',
         isLoading: false,
         autoClose: data.success ? 5000 : false,
@@ -25,10 +25,10 @@ const useToastHandler = (ref) => {
     }
   }
 
-  const errorToast = (error) => {
+  const errorToast = (error, msg) => {
     let errorsArr = handleErrors(error)
     toast.update(ref.current, {
-      render: `${errorsArr.length} Errors: ${errorsArr[0]}`,
+      render: msg ?? `${errorsArr.length} Errors: ${errorsArr[0]}`,
       ...toastConfig,
       type: 'error',
       isLoading: false,

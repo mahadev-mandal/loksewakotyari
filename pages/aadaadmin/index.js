@@ -24,6 +24,8 @@ import { gql, useMutation } from '@apollo/client';
 import { useAuthContext } from '../../context/authContext';
 import BackDrop from '../../components/backDrop';
 import useGetMe from '../../hooks/useGetMe';
+import { useRef } from 'react';
+import useToastHandler from '../../hooks/useToastHandler';
 
 const LOGIN_USER = gql`
   mutation getToken($username:String!, $password:String!,){
@@ -46,6 +48,9 @@ export default function AdminLogin() {
   const { login } = useAuthContext()
   const [showPassword, setShowPassword] = useState(false);
   const [errMsg, setErrMsg] = useState(null);
+  const [loggingIn, setLoggingIn] = useState(false)
+  const toastId = useRef(null);
+  const customToast = useToastHandler(toastId);
 
   const { data: currUser, loading: loading1 } = useGetMe()
   if (!loading1 && (currUser?.getLoggedinUser?.role == '2')) {
@@ -57,11 +62,14 @@ export default function AdminLogin() {
       if (loginUser?.user?.token && loginUser?.user?.role == '2') {
         let loggedIn = login(loginUser.user);
         if (loggedIn) {
+          customToast.dataToast(loginUser, 'Redirecting to admin dashboard')
           router.replace('/cms/dashboard');
+          setLoggingIn(false)
         }
       } else {
+        customToast.dataToast(loginUser1, loginUser?.message)
         setErrMsg(loginUser?.message)
-        console.log(loginUser?.message)
+        setLoggingIn(false);
       }
     },
   })
@@ -74,6 +82,15 @@ export default function AdminLogin() {
     resolver: yupResolver(normalUserLoginSchema),
     mode: 'onBlur'
   })
+
+  const handleFormSubmit = (data) => {
+    customToast.loadingToast('Wait logging in...');
+    setLoggingIn(true);
+    loginUser1(
+      { variables: data }
+    )
+  }
+
   if (error) {
     console.log(JSON.stringify(error, null, 2))
     // console.log(error.networkError.result.errors)
@@ -93,7 +110,7 @@ export default function AdminLogin() {
         background: 'rgb(240, 240, 240, 0.5)'
       }}>
         <AccountCircleIcon sx={{ fontSize: 80, m: 'auto', display: 'block' }} /> <br />
-        <form>
+        <form onSubmit={handleSubmit(handleFormSubmit)}>
           <TextField
             fullWidth
             variant='outlined'
@@ -133,11 +150,12 @@ export default function AdminLogin() {
           <Button
             fullWidth
             variant="outlined"
-            onClick={handleSubmit(data => loginUser1(
-              { variables: data }
-            ))}
+            type='submit'
+          // onClick={handleSubmit(data => loginUser1(
+          //   { variables: data }
+          // ))}
           >
-            Login
+            {loggingIn ? 'Logging in...' : 'Login'}
           </Button><br /><br />
         </form>
       </Paper>
